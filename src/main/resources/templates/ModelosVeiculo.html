@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Modelos de Veículo</title>
+<link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link th:href="@{/webjars/bootstrap/css/bootstrap-theme.min.css}"
+	rel="stylesheet" />
+</head>
+<body>
+	<div class="panel panel-default" style="margin: 10px">
+		<div class="panel-heading">
+			<h1 class="panel-title">Modelos de Veículo</h1>
+		</div>
+
+		<div class="panel-body">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="nav-item"><a class="nav-link" href="#cadastrar"
+					data-toggle="tab">Cadastar</a></li>
+				<li class="nav-item"><a class="nav-link" href="#listar"
+					data-toggle="tab">Listar</a></li>
+			</ul>
+			<div class="tab-content py-3">
+				<div class="tab-pane" id="cadastrar">
+					<form class="form-inline" th:method="POST"
+						th:action="@{/veiculo/modelos}" th:object="${modelo}"
+						style="margin: 20px 0">
+						<div th:switch="${mensagemCadastro.getTipo()}">
+							<div th:case="Sucesso"
+								class="alert alert-success alert-dismissible">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+								<p th:text=${{mensagemCadastro.getMensagem()}}></p>
+							</div>
+							<div th:case="Falha" class="alert alert-danger alert-dismissible">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+								<p th:text=${{mensagemCadastro.getMensagem()}}></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Modelo: </label> <input type="text" class="form-control"
+								id="modelo" placeholder="Ex: Uno, ..." th:field="*{modelo}"
+								th:required="required" /> <label> Marca: </label> <input
+								type="text" class="form-control" id="marca"
+								placeholder="Ex: Fiat, ..." th:field="*{marca}"
+								th:required="required" />
+
+							<button type="submit" class="btn btn-primary">Adicionar</button>
+						</div>
+					</form>
+				</div>
+				<div class="tab-pane" id="listar">
+					<table class="table">
+						<div th:switch="${mensagemRemocao.getTipo()}">
+							<div th:case="Sucesso"
+								class="alert alert-success alert-dismissible">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+								<p th:text=${{mensagemRemocao.getMensagem()}}></p>
+							</div>
+							<div th:case="Falha" class="alert alert-danger alert-dismissible">
+								<button type="button" class="close" data-dismiss="alert">x</button>
+								<p th:text=${{mensagemRemocao.getMensagem()}}></p>
+							</div>
+						</div>
+						<thead>
+							<tr>
+								<th>Modelo</th>
+								<th>Marca</th>
+								<th>Ação</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="modelo : ${modelos}">
+								<td th:text="${modelo.modelo}"></td>
+								<td th:text="${modelo.marca}"></td>
+								<td>
+									<div th:if="${modelo.modelo != null}">
+										<form th:action="@{/veiculo/modelos/} + ${{modelo.modelo}}"
+											th:method="POST" th:object="${modelo}">
+											<button type="submit" class="btn btn-danger">Remover</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+				localStorage.setItem('activeTab', $(e.target).attr('href'));
+			});
+			var activeTab = localStorage.getItem('activeTab');
+			if (activeTab) {
+				$('#myTab a[href="' + activeTab + '"]').tab('show');
+			}
+		});
+	</script>
+</body>
+</html>

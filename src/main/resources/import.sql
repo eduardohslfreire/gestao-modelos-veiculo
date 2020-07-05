@@ -1,0 +1,3 @@
+--insert into Modelo (id, modelo, marca) values ( 1, 'Onix', 'Chevrolet');
+--insert into Modelo (id, modelo, marca) values ( 2, 'Sandero', 'Renault');
+--insert into Modelo (id, modelo, marca) values ( 3, null, 'Fiat');
